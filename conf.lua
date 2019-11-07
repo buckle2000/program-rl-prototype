@@ -26,6 +26,7 @@ DIRECTIONS = {
 }
 
 function love.conf(t)
+    t.version = "11.3"
     -- resize window and move to top left corner
     t.window.width = TILEWIDTH * MAPWIDTH
     t.window.height = TILEHEIGHT * MAPHEIGHT

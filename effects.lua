@@ -3,8 +3,42 @@ Effects = {} -- active effects
 local E = {} -- all effects
 local frames_since_start = 0
 
+-- update effects (newly added once won't be updated)
+-- and remove expired effects at the same time
+-- deafault (no `o.update`): do nothing (don't remove)
 function effect_system_update()
     frames_since_start = frames_since_start + 1
+    local effect_lasted = {}
+    local effects_count_orig = #Effects
+    local i = 1
+    while i <= #Effects do
+        local o = Effects[i]
+        -- if the effect is newly added, it will preserve
+        -- same for effects with no `update` function
+        if i > effects_count_orig or (not o.update) or o:update() then
+            table.insert(effect_lasted, o)
+        end
+        i = i + 1
+    end
+    Effects = effect_lasted
+end
+
+-- same as effect_system_update()
+-- except that the default is to remove the object
+function effect_system_step()
+    local effect_lasted = {}
+    local effects_count_orig = #Effects
+    local i = 1
+    while i <= #Effects do
+        local o = Effects[i]
+        -- if the effect is newly added, it will preserve
+        -- same for effects who can successfully `step`
+        if i > effects_count_orig or o.step and o:step() then
+            table.insert(effect_lasted, o)
+        end
+        i = i + 1
+    end
+    Effects = effect_lasted
 end
 
 function effect_add(type, target, ...)
@@ -49,7 +83,7 @@ function E.blink(target, char_alternate)
                 return false
             end
             -- disappear with the object
-            if not object_find_one(function (o) return o == target end) then
+            if not object_select_one(function (o) return o == target end) then
                 return false
             end
             if frames_since_start % (BLINK_DURATION * 2) < BLINK_DURATION then

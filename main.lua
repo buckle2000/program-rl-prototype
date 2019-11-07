@@ -44,27 +44,11 @@ function love.load()
 end
 
 function step()
-    -- clear effects
-    local effect_lasted = {}
-    local effects_count_orig = #Effects
-    local i = 1
-    while i <= #Effects do
-        local o = Effects[i]
-        -- if the effect is newly added, it will preserve
-        -- same for effects who can successfully `step`
-        if i > effects_count_orig or o.step and o:step() then
-            table.insert(effect_lasted, o)
-        end
-        i = i + 1
-    end
-    Effects = effect_lasted
+    -- step and remove effects
+    effect_system_step()
 
-    -- update objects
-    for _,o in ipairs(Objects) do
-        if o.step then
-            o:step()
-        end
-    end
+    -- same with objects
+    object_system_step()
 end
 
 local keybinds = {
@@ -98,22 +82,8 @@ function love.textinput(...)
 end
 
 function love.update()
-    -- update effects (newly added once won't be updated)
-    -- and remove expired effects at the same time
+    -- update and remove effects
     effect_system_update()
-    local effect_lasted = {}
-    local effects_count_orig = #Effects
-    local i = 1
-    while i <= #Effects do
-        local o = Effects[i]
-        -- if the effect is newly added, it will preserve
-        -- same for effects with no `update` function
-        if i > effects_count_orig or (not o.update) or o:update() then
-            table.insert(effect_lasted, o)
-        end
-        i = i + 1
-    end
-    Effects = effect_lasted
     if State.programmed then
         ui_show()
     end
@@ -147,5 +117,4 @@ function love.draw()
     love.graphics.setColor(1, 1, 1) -- restore tint to white
     -- draw UI on top
     suit.draw()
-
 end

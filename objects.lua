@@ -19,7 +19,7 @@ local O = {
         char = "Tg", x = opts.x, y = opts.y,
         health = 3,
         step = function (self)
-            local player = object_get_player()
+            local player = object_select_player()
             if self.y == player.y then
                 return Action.move(self, math.sign(player.x - self.x), 0)
             else
@@ -29,10 +29,11 @@ local O = {
     } end,
 }
 
-function object_find_one(pred)
+-- each object takes an action
+function object_system_step()
     for _,o in ipairs(Objects) do
-        if pred(o) then
-            return o
+        if o.step then
+            o:step()
         end
     end
 end
@@ -44,6 +45,15 @@ function object_add(type, opts)
     return object
 end
 
-function object_get_player()
-    return object_find_one(function (o) return o.type == "player" end)
+-- return one object (or nil) that satisfies a certain condition
+function object_select_one(condition)
+    for _,o in ipairs(Objects) do
+        if condition(o) then
+            return o
+        end
+    end
+end
+
+function object_select_player()
+    return object_select_one(function (o) return o.type == "player" end)
 end

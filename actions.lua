@@ -17,7 +17,7 @@ end
 
 function Action:move(dx, dy)
     local newx, newy = self.x + dx, self.y + dy
-    local occupied = object_find_one(function (o) return o.x == newx and o.y == newy end)
+    local occupied = object_select_one(function (o) return o.x == newx and o.y == newy end)
     -- if the place is empty, move there
     if not occupied then
         self.x = newx; self.y = newy
@@ -37,10 +37,10 @@ end
 function to_move_player(dx, dy)
     return function()
         -- find player
-        local player = object_get_player()
+        local player = object_select_player()
         player.step = nil
         local newx, newy = player.x + dx, player.y + dy
-        local occupied = object_find_one(function (o) return o.x == newx and o.y == newy end)
+        local occupied = object_select_one(function (o) return o.x == newx and o.y == newy end)
         if occupied then
             if occupied == player then
                 -- do nothing (wait a turn)
