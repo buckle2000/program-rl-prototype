@@ -83,7 +83,7 @@ function E.blink(target, char_alternate)
                 return false
             end
             -- disappear with the object
-            if not object_select_one(function (o) return o == target end) then
+            if not object_select_first(function (o) return o == target end) then
                 return false
             end
             if frames_since_start % (BLINK_DURATION * 2) < BLINK_DURATION then

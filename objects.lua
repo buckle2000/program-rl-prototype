@@ -31,6 +31,7 @@ local O = {
 
 -- each object takes an action
 function object_system_step()
+    -- TODO FIX objects can't be removed while doing this step
     for _,o in ipairs(Objects) do
         if o.step then
             o:step()
@@ -46,7 +47,7 @@ function object_add(type, opts)
 end
 
 -- return one object (or nil) that satisfies a certain condition
-function object_select_one(condition)
+function object_select_first(condition)
     for _,o in ipairs(Objects) do
         if condition(o) then
             return o
@@ -55,5 +56,5 @@ function object_select_one(condition)
 end
 
 function object_select_player()
-    return object_select_one(function (o) return o.type == "player" end)
+    return object_select_first(function (o) return o.type == "player" end)
 end
