@@ -49,7 +49,7 @@ function effect_add(type, target, ...)
 end
 
 function effect_cancel(target)
-    for type,_ in ipairs(E) do
+    for type,_ in pairs(E) do
         target["effect_"..type] = nil
     end
 end
@@ -57,7 +57,7 @@ end
 local GLITCH_CHARSET = {"&","(",")","=","+","-","_","<",">"}
 -- permutate glyph of target object rapidly; hacking trope
 function E.glitch(target)
-    target.char_original = target.char
+    target.char_original = target.char_original or target.char
     return {
         update = function (self)
             target.char = palette_recolor(table.choice(GLITCH_CHARSET), nil, "3")
@@ -75,13 +75,20 @@ local BLINK_DURATION = 20 -- in frames
 function E.blink(target, char_alternate)
     target.char_original = target.char_original or target.char
     return {
-        step = function (self) return true end, -- always survive between turns
-        update = function (self)
-            -- there can only be one effect_blink per object
-            if target.effect_blink ~= self then
+        validate = function (self)
+            -- this type of effects survive in-between turns
+            if target.effect_blink == nil then
                 target.char = target.char_original
-                return false
             end
+            -- there can only be one effect_blink per object
+            -- expire if the latest blinking effect is not self
+            return target.effect_blink == self
+        end,
+        step = function (self)
+            return self:validate()
+        end,
+        update = function (self)
+            if not self:validate() then return false end
             -- disappear with the object
             if not object_select_first(function (o) return o == target end) then
                 return false

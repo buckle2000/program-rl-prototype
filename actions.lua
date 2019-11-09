@@ -23,8 +23,19 @@ function Action:move(dx, dy)
         self.x = newx; self.y = newy
         return
     end
-    -- attack enemy and walls
-    return Action.hurt(occupied, self, 1) -- TODO better damage code
+    if self.attack then
+        -- attack enemy and walls
+        return Action.hurt(occupied, self) -- TODO better damage code
+    end
+end
+
+-- prioritize vertical movement
+function Action:move_closer_dumb(target)
+    if self.y == target.y then
+        return Action.move(self, math.sign(target.x - self.x), 0)
+    else
+        return Action.move(self, 0, math.sign(target.y - self.y))
+    end
 end
 
 function to_move(dx, dy)

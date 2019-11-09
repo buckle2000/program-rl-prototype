@@ -16,7 +16,7 @@ for i=1,#map do
             end
         else
             if math.random() < 0.02 then
-                object_add("enemy_bline", {x=j-1,y=i-1})
+                object_add("enemy_dumb", {x=j-1,y=i-1})
             end
         end
     end

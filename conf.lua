@@ -1,5 +1,5 @@
--- SETUP = "one_cave_with_enemies"
-SETUP = "map_generation_test"
+SETUP = "one_cave_with_enemies"
+-- SETUP = "map_generation_test"
 TILEWIDTH = 10; TILEHEIGHT = 18
 MAPWIDTH = 40; MAPHEIGHT = 20
 UIWIDTH = 120

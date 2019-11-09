@@ -3,6 +3,7 @@ local grammar = {
         description = "Cancel",
         pattern = "",
         apply = function(ctx)
+            effect_cancel(ctx.target)
             return nil
         end
     },

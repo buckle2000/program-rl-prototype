@@ -2,29 +2,30 @@ Objects = {}
 
 -- all objects
 local O = {
+    -- indestructable player
     player = function (opts) return {
         char = "@", x = opts.x, y = opts.y,
         attack = 1,
     } end,
+    -- programmable wall
     wall = function (opts) return {
         char = "#", x = opts.x, y = opts.y,
         is_programmable = true,
         attack = 1,
         health = 10,
     } end,
+    -- indestructable wall
     wall_border = function (opts) return {
         char = "#", x = opts.x, y = opts.y,
     } end,
-    enemy_bline = function (opts) return {
+    -- dumb enemy that always moves closer to you
+    enemy_dumb = function (opts) return {
         char = "Tg", x = opts.x, y = opts.y,
+        attack = 1,
         health = 3,
         step = function (self)
             local player = object_select_player()
-            if self.y == player.y then
-                return Action.move(self, math.sign(player.x - self.x), 0)
-            else
-                return Action.move(self, 0, math.sign(player.y - self.y))
-            end            
+            return Action.move_closer_dumb(self, player)
         end
     } end,
 }
