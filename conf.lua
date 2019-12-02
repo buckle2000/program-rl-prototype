@@ -33,5 +33,5 @@ function love.conf(t)
     t.window.width = TILEWIDTH * MAPWIDTH
     t.window.height = TILEHEIGHT * MAPHEIGHT
     t.window.x = 0
-    t.window.y = 9
+    t.window.y = 0
 end

@@ -11,6 +11,9 @@ local palette = require("palette")
 local suit = require 'SUIT'
 
 function love.load()
+    -- reset seed
+    math.randomseed(love.timer.getTime())
+
     -- use custom font
     local font = love.graphics.newFont("assets/Inconsolata-Regular.ttf", 18)
     love.graphics.setFont(font)
